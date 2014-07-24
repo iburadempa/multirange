@@ -1,12 +1,13 @@
 multirange
 ==========
 
-todo
+Convenience functions for multiple range objects with step == 1
 
-Maturity level
---------------
+Documentation: https://readthedocs.org/projects/multirange/
 
-Although the code works, it is not stable, because functionality might be
-added or reorganized. Stability grows when I get feedback, or - but much
-slower - when just time passes by.
+Status
+------
 
+The code works, but it is not stable: functionality might be added
+or reorganized. Stability grows when I get feedback, or - but much
+slower - when just I use it and time passes by.
