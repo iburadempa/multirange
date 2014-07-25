@@ -60,7 +60,7 @@ Range
 ~~~~~
 
 A ``range(l, m)`` thus has the meaning of a set of all consecutive integers
-from l to m - 1. If l ≥ m, this means the empty set. Note that for negative
+from l to m - 1. If l >= m, this means the empty set. Note that for negative
 step values the native range object may generate several values, while our
 range object may be emtpy. Example: range(0, -10, -1) generates
 10 values, while in our view it is empty.
