@@ -54,7 +54,7 @@ Features
 Limitations
 ~~~~~~~~~~~
 
-    * Requires Python ≥ 3.3
+    * Requires Python >= 3.3
 
 Range
 ~~~~~
