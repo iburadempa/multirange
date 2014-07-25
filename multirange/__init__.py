@@ -31,6 +31,19 @@
 multirange
 ==========
 
+Convenience functions for multiple range objects with step == 1
+
+An elementary package for Python >= 3.3
+
+https://pypi.python.org/pypi/multirange/
+
+Status
+------
+
+The code works, but it is not stable: functionality might be added
+or reorganized. Stability grows when I get feedback, or - but much
+slower - when just I use it and time passes by.
+
 Introduction
 ------------
 
@@ -92,12 +105,36 @@ Multirange
 As *multirange* we define a range iterable where the ranges don't
 overlap, are not adjacent and are ordered increasingly.
 
+Usage examples
+--------------
+
+::
+
+  >>> import multirange as mr
+  >>> mr.intermediate(range(10, 15), range(0, 5))
+
+  range(5, 10)
+
+  >>> list(mr.gaps([range(4, 6), range(6, 7), range(8, 10), range(0, 1), range(1, 3)]))
+
+  [range(3, 4), range(7, 8)]
+
+  >>> mr.difference(range(1, 9), range(2, 3))
+
+  (range(1, 2), range(3, 9))
+
+  >>> mr.normalize_multi([None, range(0, 5), range(5, 7), range(8, 20)])
+
+  [range(0, 7), range(8, 20)]
+
+Consult the unit tests for more examples.
+
 Functions
 ---------
 
 """
 
-__version__ = (0, 1, 0)
+__version__ = (0, 1, 2)
 
 def normalize(r):
     """
@@ -444,5 +481,3 @@ def normalize_multi(rs, assume_ordered_increasingly=False):
             l, m = r_next.start, r_next.stop
     if last is not None:
         yield last
-
-

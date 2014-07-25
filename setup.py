@@ -1,10 +1,11 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
+from multirange import __version__ as version_triple
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
@@ -12,7 +13,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.1.0',
+    version='.'.join([str(n) for n in version_triple]),
     description='Convenience functions for multiple range objects with step == 1',
     long_description=long_description,
     url='https://github.com/iburadempa/multirange',
@@ -39,7 +40,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    keywords='set integer integers range ranges multi span interval operations',
+    keywords='set integer integers range ranges multiple span interval operations',
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', '*~']),

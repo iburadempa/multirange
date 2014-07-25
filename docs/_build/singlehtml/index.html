@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>multirange 0.1.0 documentation</title>
+    <title>multirange 0.1.2 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <div class="related">
       <h3>Navigation</h3>
       <ul>
-        <li><a href="index.html#document-index">multirange 0.1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html#document-index">multirange 0.1.2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -40,6 +40,15 @@
             
   <span class="target" id="module-multirange"></span><div class="section" id="multirange">
 <h1>multirange<a class="headerlink" href="#multirange" title="Permalink to this headline">¶</a></h1>
+<p>Convenience functions for multiple range objects with step == 1</p>
+<p>An elementary package for Python &gt;= 3.3</p>
+<p><a class="reference external" href="https://pypi.python.org/pypi/multirange/">https://pypi.python.org/pypi/multirange/</a></p>
+<div class="section" id="status">
+<h2>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
+<p>The code works, but it is not stable: functionality might be added
+or reorganized. Stability grows when I get feedback, or - but much
+slower - when just I use it and time passes by.</p>
+</div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="features">
@@ -67,14 +76,14 @@ provided they are called with valid parameters.</p>
 <h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>Requires Python ≥ 3.3</li>
+<li>Requires Python &gt;= 3.3</li>
 </ul>
 </div></blockquote>
 </div>
 <div class="section" id="range">
 <h3>Range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h3>
 <p>A <tt class="docutils literal"><span class="pre">range(l,</span> <span class="pre">m)</span></tt> thus has the meaning of a set of all consecutive integers
-from l to m - 1. If l ≥ m, this means the empty set. Note that for negative
+from l to m - 1. If l &gt;= m, this means the empty set. Note that for negative
 step values the native range object may generate several values, while our
 range object may be emtpy. Example: range(0, -10, -1) generates
 10 values, while in our view it is empty.</p>
@@ -101,6 +110,28 @@ with a large number of items for all functions.</p>
 <p>As <em>multirange</em> we define a range iterable where the ranges don&#8217;t
 overlap, are not adjacent and are ordered increasingly.</p>
 </div>
+</div>
+<div class="section" id="usage-examples">
+<h2>Usage examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">multirange</span> <span class="kn">as</span> <span class="nn">mr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span><span class="o">.</span><span class="n">intermediate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="go">range(5, 10)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">mr</span><span class="o">.</span><span class="n">gaps</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]))</span>
+
+<span class="go">[range(3, 4), range(7, 8)]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="go">(range(1, 2), range(3, 9))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span><span class="o">.</span><span class="n">normalize_multi</span><span class="p">([</span><span class="bp">None</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">20</span><span class="p">)])</span>
+
+<span class="go">[range(0, 7), range(8, 20)]</span>
+</pre></div>
+</div>
+<p>Consult the unit tests for more examples.</p>
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
@@ -287,7 +318,7 @@ ordered increasingly.</p>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
-        <li><a href="index.html#document-index">multirange 0.1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html#document-index">multirange 0.1.2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
