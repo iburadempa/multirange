@@ -43,7 +43,7 @@ setup(
     keywords='set integer integers range ranges multiple span interval operations',
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(exclude=['contrib', 'docs', 'tests*', '*~']),
+    packages=find_packages(exclude=['contrib', 'docs', 'tests*', '*~', 'NOTES']),
     test_suite = 'tests',
 )
 
