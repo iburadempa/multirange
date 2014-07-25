@@ -1,6 +1,8 @@
 multirange
 ==========
 
+An elementary package for Python ≥ 3.3
+
 Convenience functions for multiple range objects with step == 1
 
 Documentation: https://readthedocs.org/projects/multirange/

@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>multirange 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="None" href="index.html#document-index" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="index.html#document-index">multirange 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-multirange"></span><div class="section" id="multirange">
+<h1>multirange<a class="headerlink" href="#multirange" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><p class="first">provide operations on multiple instances of <em>range</em>
+(considered having <em>step</em> == 1)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since Python 3.3 <em>range</em> objects have the <em>start</em>, <em>stop</em> and <em>step</em>
+attributes.</p>
+</div>
+</li>
+<li><p class="first">avoid materializing of ranges as lists.
+Instead, the boundaries (start, stop) are used to calculate results.</p>
+</li>
+<li><p class="first">if not otherwise noted, the functions of this module throw no Exceptions,
+provided they are called with valid parameters.</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Requires Python ≥ 3.3</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="range">
+<h3>Range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h3>
+<p>A <tt class="docutils literal"><span class="pre">range(l,</span> <span class="pre">m)</span></tt> thus has the meaning of a set of all consecutive integers
+from l to m - 1. If l ≥ m, this means the empty set. Note that for negative
+step values the native range object may generate several values, while our
+range object may be emtpy. Example: range(0, -10, -1) generates
+10 values, while in our view it is empty.</p>
+<p>In its normalized form (cf. <a class="reference internal" href="#multirange.normalize" title="multirange.normalize"><tt class="xref py py-func docutils literal"><span class="pre">normalize()</span></tt></a>) a range (1) has step == 1 and
+(2) has either l &lt; m, or is None.</p>
+<p>The functions of this module always accept ranges in their normalized form,
+and if not otherwise stated, non-normalized ranges are accepted, too.</p>
+</div>
+<div class="section" id="range-iterable">
+<h3>Range iterable<a class="headerlink" href="#range-iterable" title="Permalink to this headline">¶</a></h3>
+<p>The purpose of this module is to ease common operations involving
+multiple ranges, i.e., iterables of ranges. By <em>range iterable</em>
+we mean an iterable yielding either None or an instance of <tt class="xref py py-obj docutils literal"><span class="pre">range</span></tt>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Some functions need to sort range iterables, thereby defining
+an intermediate list, so don&#8217;t expect performance for iterables
+with a large number of items for all functions.</p>
+</div>
+<p>Range iterables are not to be confused with multiranges.</p>
+</div>
+<div class="section" id="id1">
+<h3>Multirange<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>As <em>multirange</em> we define a range iterable where the ranges don&#8217;t
+overlap, are not adjacent and are ordered increasingly.</p>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multirange.normalize">
+<tt class="descclassname">multirange.</tt><tt class="descname">normalize</tt><big>(</big><em>r</em><big>)</big><a class="reference internal" href="_modules/multirange.html#normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an object which is the normalizion of range <em>r</em></p>
+<p>The normalized range is either None (if r.start &gt;= r.stop), or equals to
+range(r.start, r.stop, 1).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.filter_normalize">
+<tt class="descclassname">multirange.</tt><tt class="descname">filter_normalize</tt><big>(</big><em>rs</em><big>)</big><a class="reference internal" href="_modules/multirange.html#filter_normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.filter_normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all ranges in the given range iterable <em>rs</em>, yielding
+normalized ranges</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.filter_nonempty">
+<tt class="descclassname">multirange.</tt><tt class="descname">filter_nonempty</tt><big>(</big><em>rs</em>, <em>invert=False</em>, <em>do_normalize=True</em>, <em>with_position=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#filter_nonempty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.filter_nonempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all ranges in the given range iterable <em>rs</em> and yield those
+which are not None after normalization; if <em>invert</em> is True, yield those
+which are None</p>
+<p>If <em>do_normalize</em> is True, yield only normalized non-empty ranges;
+otherwise yield the original ranges.</p>
+<p>If with_position is True, return 2-tuples consisting of the position of
+the matching range within <em>rs</em> and the matching range. Otherwise yield
+only the matching range.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.equals">
+<tt class="descclassname">multirange.</tt><tt class="descname">equals</tt><big>(</big><em>r1</em>, <em>r2</em><big>)</big><a class="reference internal" href="_modules/multirange.html#equals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.equals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the the two ranges <em>r1</em> and <em>r2</em> are equal after
+normalization</p>
+<p>Note: If you don&#8217;t have None values and want to take into accoutn the
+step values, you can use native python equality of ranges; for instance,
+range(0, 5, -10) = range(0, -5) == range(0).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.filter_equal">
+<tt class="descclassname">multirange.</tt><tt class="descname">filter_equal</tt><big>(</big><em>rs</em>, <em>r</em>, <em>with_position=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#filter_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.filter_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all ranges in the given range iterable <em>rs</em> and yield those
+which are equal to range <em>r</em> after normalization, together with their
+position within <em>rs</em></p>
+<p>Yield 2-tuples consisting of an <tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt> indicating the position
+within <em>rs</em> and a normalized range.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.overlap">
+<tt class="descclassname">multirange.</tt><tt class="descname">overlap</tt><big>(</big><em>r1</em>, <em>r2</em><big>)</big><a class="reference internal" href="_modules/multirange.html#overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>For two ranges <em>r1</em> and <em>r2</em> return the normalized range corresponding to
+the intersection ot the sets (of consecutive integers) corresponding to
+<em>r1</em> and <em>r2</em></p>
+<p>Return a normalized result.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.filter_overlap">
+<tt class="descclassname">multirange.</tt><tt class="descname">filter_overlap</tt><big>(</big><em>rs</em>, <em>r</em>, <em>with_position=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#filter_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.filter_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over the range iterable <em>rs</em>, and yield only those ranges
+having a non-vanishing overlap with range <em>r</em></p>
+<p>Some of the original ranges are yielded, not their overlapping parts.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.match_count">
+<tt class="descclassname">multirange.</tt><tt class="descname">match_count</tt><big>(</big><em>rs</em>, <em>r</em><big>)</big><a class="reference internal" href="_modules/multirange.html#match_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.match_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of ranges yielded from iterable <em>rs</em>,
+which have a non-vanishing overlap with range <em>r</em></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.overlap_all">
+<tt class="descclassname">multirange.</tt><tt class="descname">overlap_all</tt><big>(</big><em>rs</em><big>)</big><a class="reference internal" href="_modules/multirange.html#overlap_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.overlap_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the range corresponding to the intersection of the sets of integers
+corresponding to the ranges obtained from the iterable <em>rs</em></p>
+<p>Return a normalized result.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.is_disjunct">
+<tt class="descclassname">multirange.</tt><tt class="descname">is_disjunct</tt><big>(</big><em>rs</em>, <em>assume_ordered_increasingly=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#is_disjunct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.is_disjunct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the range iterable <em>rs</em> consists of mutually disjunct ranges</p>
+<p>If <em>assume_ordered_increasingly</em> is True, only direct neighbors (qua
+iteration order) are checked for non-vanishing overlap.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.covering_all">
+<tt class="descclassname">multirange.</tt><tt class="descname">covering_all</tt><big>(</big><em>rs</em><big>)</big><a class="reference internal" href="_modules/multirange.html#covering_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.covering_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the smallest covering range for the ranges in range iterable <em>rs</em></p>
+<p>Return a normalized result.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.contains">
+<tt class="descclassname">multirange.</tt><tt class="descname">contains</tt><big>(</big><em>r1</em>, <em>r2</em><big>)</big><a class="reference internal" href="_modules/multirange.html#contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether range <em>r1</em> contains range <em>r2</em></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.filter_contained">
+<tt class="descclassname">multirange.</tt><tt class="descname">filter_contained</tt><big>(</big><em>rs</em>, <em>r</em>, <em>with_position=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#filter_contained"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.filter_contained" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield those ranges from range iterable <em>rs</em>, which are contained in range
+<em>r</em></p>
+<p>If with_position is True, yield 2-tuples consisting of the position of the
+matching range within <em>rs</em> and the matching range.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.is_covered_by">
+<tt class="descclassname">multirange.</tt><tt class="descname">is_covered_by</tt><big>(</big><em>rs</em>, <em>r</em><big>)</big><a class="reference internal" href="_modules/multirange.html#is_covered_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.is_covered_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether range <em>r</em> covers all ranges from range iterable <em>rs</em></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.intermediate">
+<tt class="descclassname">multirange.</tt><tt class="descname">intermediate</tt><big>(</big><em>r1</em>, <em>r2</em>, <em>assume_ordered=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#intermediate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.intermediate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the range inbetween range <em>r1</em> and range <em>r2</em>, or None
+if they overlap or if at least one of them corresponds to an empty set</p>
+<p>Return a normalized result.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.sort_by_start">
+<tt class="descclassname">multirange.</tt><tt class="descname">sort_by_start</tt><big>(</big><em>rs</em><big>)</big><a class="reference internal" href="_modules/multirange.html#sort_by_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.sort_by_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of normalized ranges in the range iterable <em>rs</em>,
+sorted by their start values, and omitting empty ranges</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.gaps">
+<tt class="descclassname">multirange.</tt><tt class="descname">gaps</tt><big>(</big><em>rs</em>, <em>assume_ordered=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#gaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.gaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield the gaps between the ranges from range iterable <em>rs</em>, i.e.,
+the maximal ranges without overlap with any of the ranges, but within
+the covering range</p>
+<p>Yield normalized, non-empty ranges.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.is_partition_of">
+<tt class="descclassname">multirange.</tt><tt class="descname">is_partition_of</tt><big>(</big><em>rs</em>, <em>assume_ordered=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#is_partition_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.is_partition_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the covering range of the ranges from range iterable <em>rs</em>,
+if they have no gaps; else return None</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.difference">
+<tt class="descclassname">multirange.</tt><tt class="descname">difference</tt><big>(</big><em>r1</em>, <em>r2</em><big>)</big><a class="reference internal" href="_modules/multirange.html#difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return two ranges resulting when the integers from range <em>r2</em> are
+removed from range <em>r1</em></p>
+<p>Return two ranges: the first being the part below <em>r2</em> and the second
+the one above <em>r2</em>. They may both be None. In the special case where <em>r2</em>
+after normalization equals None, return (r1, None) (i.e., take the
+difference to be the lower part).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multirange.normalize_multi">
+<tt class="descclassname">multirange.</tt><tt class="descname">normalize_multi</tt><big>(</big><em>rs</em>, <em>assume_ordered_increasingly=False</em><big>)</big><a class="reference internal" href="_modules/multirange.html#normalize_multi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multirange.normalize_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a multirange from the given range iterable <em>rs</em></p>
+<p>Overlapping or adjacent ranges are merged into one, and the ranges are
+ordered increasingly.</p>
+<p>Yield normalized ranges. Don&#8217;t yield None.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="index.html#document-index">multirange 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, ibu radempa.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
