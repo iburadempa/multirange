@@ -1,2 +1,4 @@
+v0.1.3, 2014-11-07 -- Fix an edge case in normalize_multi
+v0.1.2, 2014-07-25 -- Mostly improved documentation
 v0.1.0, 2014-07-24 -- Initial release
 
