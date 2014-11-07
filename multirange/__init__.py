@@ -479,5 +479,6 @@ def normalize_multi(rs, assume_ordered_increasingly=False):
                 last = range(l, m) # if there is no next iteration
         else:
             l, m = r_next.start, r_next.stop
+            last = range(l, m)
     if last is not None:
         yield last

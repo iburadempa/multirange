@@ -193,6 +193,12 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(difference(range(1, 9), range(5, 15)), (range(1, 5), None))
 
     def test_normalize_multi(self):
+        rs = []
+        self.assertEqual(list(normalize_multi(rs)), [])
+        self.assertEqual(list(normalize_multi(rs, assume_ordered_increasingly=True)), [])
+        rs = [range(0, 1)]
+        self.assertEqual(list(normalize_multi(rs)), [range(0, 1)])
+        self.assertEqual(list(normalize_multi(rs, assume_ordered_increasingly=True)), [range(0, 1)])
         rs = [range(0, 2), range(4, 5), range(5, 7, 3)]
         self.assertEqual(list(normalize_multi(rs)), [range(0, 2), range(4, 7)])
         self.assertEqual(list(normalize_multi(rs, assume_ordered_increasingly=True)), [range(0, 2), range(4, 7)])
