@@ -41,8 +41,9 @@ Status
 ------
 
 The code works, but it is not stable: functionality might be added
-or reorganized. Stability grows when I get feedback, or - but much
-slower - when just I use it and time passes by.
+or reorganized as long as the major version equals 0
+(cf. http://semver.org/spec/v2.0.0.html, item #4).
+Hint: Stability grows quicker when you give me feedback.
 
 Introduction
 ------------
@@ -72,11 +73,11 @@ Limitations
 Range
 ~~~~~
 
-A ``range(l, m)`` thus has the meaning of a set of all consecutive integers
+A ``range(l, m)`` has the meaning of a set of all consecutive integers
 from l to m - 1. If l >= m, this means the empty set. Note that for negative
 step values the native range object may generate several values, while our
 range object may be emtpy. Example: range(0, -10, -1) generates
-10 values, while in our view it is empty.
+10 values, while in our view (step == 1) it is empty.
 
 In its normalized form (cf. :func:`normalize`) a range (1) has step == 1 and
 (2) has either l < m, or is None.
@@ -94,7 +95,7 @@ we mean an iterable yielding either None or an instance of :py:obj:`range`.
 .. warning::
 
     Some functions need to sort range iterables, thereby defining
-    an intermediate list, so don't expect performance for iterables
+    an intermediate list, so don't expect optimal performance for iterables
     with a large number of items for all functions.
 
 Range iterables are not to be confused with multiranges.
@@ -134,12 +135,12 @@ Functions
 
 """
 
-__version__ = (0, 1, 3)
+__version__ = (0, 2, 0)
 
 def normalize(r):
     """
-    Return an object which is the normalizion of range *r*
-    
+    Return an object which is the normalization of range *r*
+
     The normalized range is either None (if r.start >= r.stop), or equals to
     range(r.start, r.stop, 1).
     """
@@ -194,9 +195,9 @@ def equals(r1, r2):
     Return whether the the two ranges *r1* and *r2* are equal after
     normalization
 
-    Note: If you don't have None values and want to take into accoutn the
+    Note: If you don't have None values and want to take into account the
     step values, you can use native python equality of ranges; for instance,
-    range(0, 5, -10) = range(0, -5) == range(0).
+    range(0, 5, -10) == range(0, -5) == range(0).
     """
     n1 = normalize(r1)
     n2 = normalize(r2)
@@ -204,23 +205,26 @@ def equals(r1, r2):
         return n2 is None
     return n1 == n2
 
-def filter_equal(rs, r, with_position=False):
+def filter_equal(rs, r, do_normalize=True, with_position=False):
     """
     Iterate over all ranges in the given range iterable *rs* and yield those
-    which are equal to range *r* after normalization, together with their
-    position within *rs*
+    which are equal to range *r* after normalization
 
-    Yield 2-tuples consisting of an :py:obj:`int` indicating the position
-    within *rs* and a normalized range.
+    If *do_normalize* evaluates to True, then do not return the original items
+    from *rs*, but instead normalized ranges.
+
+    If *with_position* evalues to True, then yield 2-tuples consisting of an
+    :py:obj:`int` indicating the position of a matching range within *rs* and
+    the range itself.
     """
-    r = normalize(r)
+    n = normalize(r)
     for pos, r1 in enumerate(rs):
         n1 = normalize(r1)
-        if equals(n1, r):
+        if equals(n1, n):
             if with_position:
-                yield pos, n1
+                yield pos, (n1 if do_normalize else r1)
             else:
-                yield n1
+                yield (n1 if do_normalize else r1)
 
 def overlap(r1, r2):
     """
@@ -238,19 +242,26 @@ def overlap(r1, r2):
         return None
     return range(max(r1.start, r2.start), min(r1.stop, r2.stop))
 
-def filter_overlap(rs, r, with_position=False):
+def filter_overlap(rs, r, do_normalize=False, with_position=False):
     """
     Iterate over the range iterable *rs*, and yield only those ranges
     having a non-vanishing overlap with range *r*
-    
-    Some of the original ranges are yielded, not their overlapping parts.
+
+    Note: Some of the original ranges are yielded, not their overlapping parts.
+
+    If *do_normalize* evaluates to True, then do not return the original items
+    from *rs*, but instead normalized ranges.
+
+    If *with_position* evalues to True, then yield 2-tuples consisting of an
+    :py:obj:`int` indicating the position of a matching range within *rs* and
+    the range itself.
     """
     for pos, r1 in enumerate(rs):
         if overlap(r1, r):
             if with_position:
-                yield pos, r1
+                yield pos, (normalize(r1) if do_normalize else r1)
             else:
-                yield r1
+                yield (normalize(r1) if do_normalize else r1)
 
 def match_count(rs, r):
     """
@@ -329,26 +340,26 @@ def contains(r1, r2):
         return True
     if n1 is None:
         return False # n2 is not None
-    l1, m1 = n1.start, n1.stop
-    l2, m2 = n2.start, n2.stop
-    if l1 <= l2 and m2 <= m1:
-        return True
-    return False
+    return n1.start <= n2.start and n2.stop <= n1.stop
 
-def filter_contained(rs, r, with_position=False):
+def filter_contained(rs, r, do_normalize=False, with_position=False):
     """
     Yield those ranges from range iterable *rs*, which are contained in range
     *r*
 
-    If with_position is True, yield 2-tuples consisting of the position of the
-    matching range within *rs* and the matching range.
+    If *do_normalize* evaluates to True, then do not return the original items
+    from *rs*, but instead normalized ranges.
+
+    If *with_position* evalues to True, then yield 2-tuples consisting of an
+    :py:obj:`int` indicating the position of a matching range within *rs* and
+    the range itself.
     """
     for pos, r1 in enumerate(rs):
         if contains(r, r1):
             if with_position:
-                yield pos, r1
+                yield pos, (normalize(r1) if do_normalize else r1)
             else:
-                yield r1
+                yield (normalize(r1) if do_normalize else r1)
 
 def is_covered_by(rs, r):
     """
@@ -482,3 +493,4 @@ def normalize_multi(rs, assume_ordered_increasingly=False):
             last = range(l, m)
     if last is not None:
         yield last
+

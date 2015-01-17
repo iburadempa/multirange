@@ -43,6 +43,8 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(list(filter_equal(rs, None)), [None, None])
         self.assertEqual(list(filter_equal(rs, range(0, 2), with_position=True)), [(1, range(0, 2)), (4, range(0, 2))])
         self.assertEqual(list(filter_equal(rs, None, with_position=True)), [(2, None), (3, None)])
+        self.assertEqual(list(filter_equal(rs, range(0, 2), do_normalize=False)), [range(0, 2, 3), range(0, 2)])
+        self.assertEqual(list(filter_equal(rs, range(0, 2), do_normalize=False, with_position=True)), [(1, range(0, 2, 3)), (4, range(0, 2))])
 
     def test_overlap(self):
         self.assertEqual(overlap(None, range(3, 7)), None)
@@ -58,6 +60,8 @@ class TestMultirange(unittest.TestCase):
         rs = (range(0, 10), range(10, 10), range(5, -5, 2), range(0, 10, 2))
         self.assertEqual(list(filter_overlap(rs, range(8, 20))), [range(0, 10), range(0, 10, 2)])
         self.assertEqual(list(filter_overlap(rs, range(8, 20), with_position=True)), [(0, range(0, 10)), (3, range(0, 10, 2))])
+        self.assertEqual(list(filter_overlap(rs, range(8, 20), do_normalize=True)), [range(0, 10), range(0, 10)])
+        self.assertEqual(list(filter_overlap(rs, range(8, 20), do_normalize=True, with_position=True)), [(0, range(0, 10)), (3, range(0, 10))])
 
     def test_match_count(self):
         self.assertEqual(match_count([], range(-1, 1)), 0)
@@ -124,6 +128,8 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(list(filter_contained(rs, range(3, 15), with_position=True)), rs2_w_pos)
         self.assertEqual(list(filter_contained(rs, range(5, 12), with_position=True)), rs2_w_pos)
         self.assertEqual(list(filter_contained(rs, range(5, 11), with_position=True)), [(1, range(5, 8)), (2, None)])
+        self.assertEqual(list(filter_contained(rs, range(3, 15), do_normalize=True)), [range(5, 8), None, range(10, 12)])
+        self.assertEqual(list(filter_contained(rs, range(3, 15), do_normalize=True, with_position=True)), [(1, range(5, 8)), (2, None), (3, range(10, 12))])
 
     def test_is_covered_by(self):
         rs = [range(0, 3), range(5, 8), None, range(20, 30)]
