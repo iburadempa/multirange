@@ -227,3 +227,12 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(list(normalize_multi(rs)), [range(0, 5), range(6, 9)])
         self.assertEqual(list(normalize_multi(rs, assume_ordered_increasingly=True)), [range(0, 5), range(6, 9)])
 
+    def test_difference_one_multi(self):
+        r = range(0, 20, 3)
+        mr1 = [range(2, 4), range(6, 8)]
+        self.assertEqual(list(difference_one_multi(r, mr1)), [range(0, 2), range(4, 6), range(8, 20)])
+        mr2 = [range(-2, 1), range(2, 4), range(6, 8), range(15, 25)]
+        self.assertEqual(list(difference_one_multi(r, mr2)), [range(1, 2), range(4, 6), range(8, 15)])
+        mr3 = [range(-2, 0), range(2, 4), range(6, 8), range(20, 25)]
+        self.assertEqual(list(difference_one_multi(r, mr3)), [range(0, 2), range(4, 6), range(8, 20)])
+

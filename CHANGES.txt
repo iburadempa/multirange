@@ -1,4 +1,5 @@
 v0.2.0, 2015-01-??
+ * add function difference_one_multi
  * add keyword argument do_normalize to functions filter_equal, filter_overlap, filer_contained
  * minor improvements on documentation
 v0.1.3, 2014-11-07 -- Fix an edge case in normalize_multi

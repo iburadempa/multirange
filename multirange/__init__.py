@@ -116,7 +116,7 @@ Usage examples
 
   range(5, 10)
 
-  >>> list(mr.gaps([range(4, 6), range(6, 7), range(8, 10), range(0, 1), range(1, 3)]))
+  >>> list(mr.gaps([range(4, 6), range(6, 7), range(8, 10), range(0, 3)]))
 
   [range(3, 4), range(7, 8)]
 
@@ -124,9 +124,13 @@ Usage examples
 
   (range(1, 2), range(3, 9))
 
-  >>> mr.normalize_multi([None, range(0, 5), range(5, 7), range(8, 20)])
+  >>> list(mr.normalize_multi([None, range(0, 5), range(5, 7), range(8, 20)]))
 
   [range(0, 7), range(8, 20)]
+
+  >>> list(mr.difference_one_multi(range(0, 10), [range(-2, 2), range(4, 5)]))
+
+  [range(2, 4), range(5, 10)]
 
 Consult the unit tests for more examples.
 
@@ -493,4 +497,26 @@ def normalize_multi(rs, assume_ordered_increasingly=False):
             last = range(l, m)
     if last is not None:
         yield last
+
+def difference_one_multi(r, mr):
+    """
+    Subtract multirange *mr* from range *r*, resulting in a multirange
+    """
+    n = normalize(r)
+    if n is None:
+        return 
+    l = n.start
+    m = n.stop
+    i = l
+    for r1 in mr:
+        if r1.start <= l:
+            i = max(l, r1.stop)
+            continue
+        if r1.start >= m:
+            yield range(i, m)
+            return
+        yield range(i, r1.start)
+        i = r1.stop
+    if i < m:
+        yield range(i, m)
 
