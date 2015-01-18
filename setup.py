@@ -14,7 +14,7 @@ setup(
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='.'.join([str(n) for n in version_triple]),
-    description='Convenience functions for multiple range objects with step == 1',
+    description='Convenience functions for multiple range-like objects',
     long_description=long_description,
     url='https://github.com/iburadempa/multirange',
     author='ibu radempa',

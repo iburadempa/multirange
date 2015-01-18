@@ -1,4 +1,6 @@
-v0.2.0, 2015-01-??
+v0.2.0, 2015-01-18
+ * introduce generalized range objects (affecting most functions, yet in a backwards compatible way)
+ * fix wrong documentation for function sort_by_start
  * add function difference_one_multi
  * add keyword argument do_normalize to functions filter_equal, filter_overlap, filer_contained
  * minor improvements on documentation
