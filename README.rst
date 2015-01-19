@@ -1,6 +1,6 @@
 multirange
 ==========
-Convenience functions for multiple range objects with step == 1
+Convenience functions for multiple range-like objects
 
 An elementary package for Python >= 3.3
 
@@ -20,8 +20,7 @@ Introduction
 ------------
 
 This library for Python >= 3.3 provides convenience functions for multiple
-range objects with step == 1 (corresponding to finite sets of consecutive
-integers).
+range-like objects (corresponding to finite sets of consecutive integers).
 
 It has 3 types of operations:
 
