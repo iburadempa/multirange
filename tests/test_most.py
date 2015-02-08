@@ -366,3 +366,70 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(d[2].start, 8)
         self.assertEqual(d[2].stop, 20)
 
+    def test_multi_intersection(self):
+        mr1 = [range(2, 4), range(6, 9), range(15, 20), range(25, 30)]
+        mr2 = [range(-2, 10), range(15, 25), range(30, 32)]
+        self.assertEqual(list(multi_intersection(mr1, mr2)),
+            [range(2, 4), range(6, 9), range(15, 20)])
+
+        mr1 = [range(-2, 4), range(24, 30)]
+        mr2 = [range(-2, 10), range(15, 25)]
+        self.assertEqual(list(multi_intersection(mr1, mr2)),
+            [range(-2, 4), range(24, 25)])
+
+        mr1 = []
+        mr2 = [range(-2, 10), range(15, 25)]
+        self.assertEqual(list(multi_intersection(mr1, mr2)), [])
+
+        mr1 = [range(-2, 10), range(15, 25)]
+        mr2 = []
+        self.assertEqual(list(multi_intersection(mr1, mr2)), [])
+
+        mr1 = [range(2, 4), MyRange(6, 9), range(15, 20), range(25, 30)]
+        mr2 = [range(-2, 10), range(15, 25), MyRange(30, 32)]
+        r = list(multi_intersection(mr1, mr2, construct=MyRange))
+        self.assertEqual(r[0].start, 2)
+        self.assertEqual(r[0].stop, 4)
+        self.assertEqual(r[1].start, 6)
+        self.assertEqual(r[1].stop, 9)
+        self.assertEqual(r[2].start, 15)
+        self.assertEqual(r[2].stop, 20)
+
+    def test_multi_union(self):
+        mr1 = [range(2, 4), MyRange(6, 9), range(15, 20), range(25, 30)]
+        mr2 = [range(-2, 10), range(15, 25), MyRange(30, 32)]
+        self.assertEqual(list(multi_union(mr1, mr2)),
+                         [range(-2, 10), range(15, 32)])
+
+        mr1 = [range(0, 5), range(6, 9), MyRange(15, 20), range(25, 30), range (40, 50)]
+        mr2 = [range(0, 6), range(15, 25), range(30, 32), range(45, 55)]
+        self.assertEqual(list(multi_union(mr1, mr2)),
+            [range(0, 9), range(15, 32), range(40, 55)])
+
+        mr1 = [MyRange(0, 1), range(3, 4), range(5, 6), range(7, 9), range (10, 20)]
+        mr2 = [range(1, 2)]
+        self.assertEqual(list(multi_union(mr1, mr2)),
+            [range(0, 2), range(3, 4), range(5, 6), range(7, 9), range (10, 20)])
+        self.assertEqual(list(multi_union(mr2, mr1)),
+            [range(0, 2), range(3, 4), range(5, 6), range(7, 9), range (10, 20)])
+        r = list(multi_union(mr1, [MyRange(0, 3)], construct=MyRange))
+        self.assertEqual(r[0].start, 0)
+        self.assertEqual(r[0].stop, 4)
+        self.assertEqual(r[1].start, 5)
+        self.assertEqual(r[1].stop, 6)
+        self.assertEqual(r[2].start, 7)
+        self.assertEqual(r[2].stop, 9)
+        self.assertEqual(r[3].start, 10)
+        self.assertEqual(r[3].stop, 20)
+        
+        mr1 = []
+        mr2 = [range(0, 1), range(3, 4), range(5, 6), range(7, 9)]
+        self.assertEqual(list(multi_union(mr1, mr2)), mr2)
+        self.assertEqual(list(multi_union(mr2, mr1)), mr2)
+        
+        mr1 = [range(0, 1), range(3, 4), range(5, 6), range(7, 9)]
+        mr2 = mr1
+        mr1a = [MyRange(0, 1), MyRange(3, 4), MyRange(5, 6), MyRange(7, 9)]
+        self.assertEqual(list(multi_union(mr1, mr2)), mr1)
+        self.assertEqual(list(multi_union(mr2, mr1)), mr1)
+
