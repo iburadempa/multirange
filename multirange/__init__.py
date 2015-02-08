@@ -435,6 +435,37 @@ def is_covered_by(rs, r):
     cov = covering_all(rs)
     return contains(r, cov)
 
+def symmetric_difference(r1, r2, construct=range):
+    """
+    Return the symmetric difference between range *r1* and range *r2* as two
+    range-like objects (constructed using *construct*, and possibly None),
+    where the first corresponds to a subset or *r1* and the second corresponds
+    to a subset or *r2*
+
+    Instead of ranges, *r1* and *r2* can also be range-like objects.
+
+    Note: The resulting range-like objects correspond to disjunct sets of
+    integers, but they need not be ordered, if *r1* and *r2* are not.
+    """
+    n1 = normalize(r1, construct=construct)
+    n2 = normalize(r2, construct=construct)
+    if n1 is None:
+        return None, n2
+    if n2 is None:
+        return n1, None
+    l1, m1 = n1.start, n1.stop
+    l2, m2 = n2.start, n2.stop
+    if m1 <= l2:
+        return n1, n2
+    if m2 <= l1:
+        return n1, n2
+    if l2 < m1:
+        return (construct(l1, l2) if l1 < l2 else None,
+                construct(m1, m2) if m1 < m2 else None)
+    else: # l1 < m2
+        return (construct(m2, m1) if m2 < m1 else None,
+                construct(l2, l1) if l2 < l1 else None)
+
 def intermediate(r1, r2, construct=range, assume_ordered=False):
     """
     Return the range inbetween range *r1* and range *r2*, or None

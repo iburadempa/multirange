@@ -225,10 +225,25 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(is_covered_by(rs, range(10, 30)), False)
         self.assertEqual(is_covered_by(rs, range(-5, 35)), True)
 
+    def test_symmetric_difference(self):
+        self.assertEqual(symmetric_difference(None, None), (None, None))
+        self.assertEqual(symmetric_difference(None, range(0, 5)), (None, range(0, 5)))
+        self.assertEqual(symmetric_difference(range(0, 5), None), (range(0, 5), None))
+        self.assertEqual(symmetric_difference(range(0, 5), range(5, 10)), (range(0, 5), range(5, 10)))
+        self.assertEqual(symmetric_difference(range(0, 10), range(5, 10)), (range(0, 5), None))
+        self.assertEqual(symmetric_difference(range(0, 5), range(0, 10)), (None, range(5, 10)))
+        self.assertEqual(symmetric_difference(range(0, 10), range(5, 15)), (range(0, 5), range(10, 15)))
+        r1, r2 = symmetric_difference(range(0, 10), MyRange(5, 15), construct=MyRange)
+        self.assertEqual(r1.start, 0)
+        self.assertEqual(r1.stop, 5)
+        self.assertEqual(r2.start, 10)
+        self.assertEqual(r2.stop, 15)
+
     def test_intermediate(self):
         self.assertEqual(intermediate(None, None), None)
         self.assertEqual(intermediate(range(0, 5), None), None)
         self.assertEqual(intermediate(None, range(0, 5)), None)
+        self.assertEqual(intermediate(range(0, 5), range(0, 10)), None)
         self.assertEqual(intermediate(range(0, 5), range(5, 9)), None)
         self.assertEqual(intermediate(range(0, 5), range(10, 15)), range(5, 10))
         self.assertEqual(intermediate(range(10, 15), range(0, 5)), range(5, 10))
