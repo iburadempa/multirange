@@ -109,10 +109,14 @@ using a non-default value of the *construct* keyword argument in most functions
 The functions of this module always accept ranges in their normalized form,
 and if not otherwise stated, non-normalized ranges are accepted, too.
 
+Two ranges are called *adjacent* if the end (value of the stop attribute) of
+one coincides with the beginning (value of the start attribute) of the other.
+
 Generalized range object
 ~~~~~~~~~~~~~~~~~~~~~~~~
 When the documentation of this module refers to a *range*, it usually means
-a *generalized range object*, not just Python's native :py:obj:`range`.
+a *generalized range object* (or *range-like object*), not just Python's
+native :py:obj:`range`.
 
 As *generalized range object* we define an object which can be constructed
 using exactly two integer arguments, *start* and *stop*, and which has
@@ -281,6 +285,23 @@ def filter_equal(rs, r, do_normalize=True, construct=range,
                 yield pos, (n1 if do_normalize else r1)
             else:
                 yield (n1 if do_normalize else r1)
+
+def is_adjacent(r1, r2):
+    """
+    Return whether the ranges *r1* and *r2* are adjacent
+
+    If *r1* or *r2* is None after normalization, return None instead of a
+    :py:obj:`bool`.
+    """
+    n1 = normalize(r1)
+    if n1 is None:
+        return None
+    n2 = normalize(r2)
+    if n2 is None:
+        return None
+    l1, m1 = n1.start, n1.stop
+    l2, m2 = n2.start, n2.stop
+    return l1 == m2 or l2 == m1
 
 def overlap(r1, r2, construct=range):
     """

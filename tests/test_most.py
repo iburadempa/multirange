@@ -94,6 +94,13 @@ class TestMultirange(unittest.TestCase):
         self.assertEqual(fe[1].start, 0)
         self.assertEqual(fe[1].stop, 2)
 
+    def test_is_adjacent(self):
+        self.assertEqual(is_adjacent(None, range(3, 7)), None)
+        self.assertEqual(is_adjacent(range(3, 7), range(5, -5)), None)
+        self.assertEqual(is_adjacent(range(3, 7), range(5, 10)), False)
+        self.assertEqual(is_adjacent(range(3, 7), range(7, 10)), True)
+        self.assertEqual(is_adjacent(range(7, 10), range(3, 7)), True)
+
     def test_overlap(self):
         self.assertEqual(overlap(None, range(3, 7)), None)
         self.assertEqual(overlap(range(3, 7), None), None)
