@@ -58,7 +58,8 @@ It has 3 main types of operations:
 
     * operations involving few range-like objects (a generalization of Python's
       native range objects)
-    * operations involving an iterable of range-like objects (*range iterables*)
+    * operations involving an iterable of range-like objects
+      (*range iterables*)
     * operations involving so-called multiranges; we define a *multirange*
       as iterables range-like objects, which have no mutual overlap, which
       are not adjacent, and which are ordered increasingly; a special case
@@ -96,8 +97,8 @@ A range *r* has the meaning of the set of all consecutive integers from r.start
 to r.stop - 1. If r.start >= r.stop, this means the empty set.
 Note that for negative step values the native Python :py:obj:`range` object
 may generate several values, while in our context an empty set may result.
-Example: range(0, -10, -1) generates 10 values, while in our context (step == 1)
-this entails an empty set of integers.
+Example: range(0, -10, -1) generates 10 values, while in our context
+(step == 1) this entails an empty set of integers.
 
 Ranges often need to be brought to normal form (cf. :func:`normalize`).
 By default the normal form is a native :py:obj:`range` object with step == 1,
@@ -175,14 +176,15 @@ Usage examples
     [range(3, 4), range(7, 8)]
     >>> mr.difference(range(1, 9), range(2, 3))
     (range(1, 2), range(3, 9))
-    >>> list(mr.normalize_multi([None, range(0, 5), range(5, 7), range(8, 20)]))
-    [range(0, 7), range(8, 20)]
-    >>> list(mr.difference_one_multi(range(0, 10), [range(-2, 2), range(4, 5)]))
-    [range(2, 4), range(5, 10)]
+    >>> list(mr.normalize_multi([None, range(0, 5), range(5, 7), range(8, 9)]))
+    [range(0, 7), range(8, 9)]
+    >>> list(mr.difference_one_multi(range(0, 9), [range(-2, 2), range(4, 5)]))
+    [range(2, 4), range(5, 9)]
 
 Please consult the unit tests (latest_) for more examples.
 
-.. _latest: https://github.com/iburadempa/multirange/blob/master/tests/test_most.py
+.. _latest:
+    https://github.com/iburadempa/multirange/blob/master/tests/test_most.py
 
 
 Functions
@@ -190,6 +192,7 @@ Functions
 """
 
 __version__ = (0, 2, 0)
+
 
 def normalize(r, construct=range):
     """
@@ -210,6 +213,7 @@ def normalize(r, construct=range):
         else:
             return construct(r.start, r.stop)
 
+
 def filter_normalize(rs, construct=range):
     """
     Iterate over all ranges in the given range iterable *rs*, yielding
@@ -217,6 +221,7 @@ def filter_normalize(rs, construct=range):
     """
     for r in rs:
         yield normalize(r, construct=construct)
+
 
 def filter_nonempty(rs, invert=False, do_normalize=True, construct=range,
                     with_position=False):
@@ -247,6 +252,7 @@ def filter_nonempty(rs, invert=False, do_normalize=True, construct=range,
                 else:
                     yield r
 
+
 def equals(r1, r2):
     """
     Return whether the the two ranges *r1* and *r2* are equal after
@@ -261,6 +267,7 @@ def equals(r1, r2):
     if n1 is None:
         return n2 is None
     return n1 == n2
+
 
 def filter_equal(rs, r, do_normalize=True, construct=range,
                  with_position=False):
@@ -279,12 +286,14 @@ def filter_equal(rs, r, do_normalize=True, construct=range,
     n = normalize(r)
     for pos, r1 in enumerate(rs):
         n1 = normalize(r1, construct=construct)
-        if (n1 is None and n is None) or (n1 is not None and n is not None
-          and n1.start == n.start and n1.stop == n.stop):
+        if (n1 is None and n is None) or \
+           (n1 is not None and n is not None and
+           n1.start == n.start and n1.stop == n.stop):
             if with_position:
                 yield pos, (n1 if do_normalize else r1)
             else:
                 yield (n1 if do_normalize else r1)
+
 
 def is_adjacent(r1, r2):
     """
@@ -303,6 +312,7 @@ def is_adjacent(r1, r2):
     l2, m2 = n2.start, n2.stop
     return l1 == m2 or l2 == m1
 
+
 def overlap(r1, r2, construct=range):
     """
     For two ranges *r1* and *r2* return the normalized range corresponding to
@@ -319,6 +329,7 @@ def overlap(r1, r2, construct=range):
     if r1.stop <= r2.start or r2.stop <= r1.start:
         return None
     return construct(max(r1.start, r2.start), min(r1.stop, r2.stop))
+
 
 def filter_overlap(rs, r, do_normalize=False, construct=range,
                    with_position=False):
@@ -345,6 +356,7 @@ def filter_overlap(rs, r, do_normalize=False, construct=range,
                 yield (normalize(r1, construct=construct)
                        if do_normalize else r1)
 
+
 def match_count(rs, r):
     """
     Return the number of ranges yielded from iterable *rs*,
@@ -355,6 +367,7 @@ def match_count(rs, r):
         if overlap(r, r2):
             n += 1
     return n
+
 
 def overlap_all(rs, construct=range):
     """
@@ -376,6 +389,7 @@ def overlap_all(rs, construct=range):
             o = overlap(o, r)
     return normalize(o, construct=construct)
 
+
 def is_disjunct(rs, assume_ordered_increasingly=False):
     """
     Return whether the range iterable *rs* consists of mutually disjunct ranges
@@ -391,6 +405,7 @@ def is_disjunct(rs, assume_ordered_increasingly=False):
             return False
         left = right
     return True
+
 
 def covering_all(rs, construct=range):
     """
@@ -414,6 +429,7 @@ def covering_all(rs, construct=range):
         return None
     return construct(l_c, m_c)
 
+
 def contains(r1, r2):
     """
     Return whether range *r1* contains range *r2*
@@ -423,8 +439,9 @@ def contains(r1, r2):
     if n2 is None:
         return True
     if n1 is None:
-        return False # n2 is not None
+        return False  # n2 is not None
     return n1.start <= n2.start and n2.stop <= n1.stop
+
 
 def filter_contained(rs, r, do_normalize=False, construct=range,
                      with_position=False):
@@ -449,12 +466,14 @@ def filter_contained(rs, r, do_normalize=False, construct=range,
                 yield (normalize(r1, construct=construct)
                        if do_normalize else r1)
 
+
 def is_covered_by(rs, r):
     """
     Return whether range *r* covers all ranges from range iterable *rs*
     """
     cov = covering_all(rs)
     return contains(r, cov)
+
 
 def symmetric_difference(r1, r2, construct=range):
     """
@@ -483,9 +502,10 @@ def symmetric_difference(r1, r2, construct=range):
     if l2 < m1:
         return (construct(l1, l2) if l1 < l2 else None,
                 construct(m1, m2) if m1 < m2 else None)
-    else: # l1 < m2
+    else:  # l1 < m2
         return (construct(m2, m1) if m2 < m1 else None,
                 construct(l2, l1) if l2 < l1 else None)
+
 
 def intermediate(r1, r2, construct=range, assume_ordered=False):
     """
@@ -508,6 +528,7 @@ def intermediate(r1, r2, construct=range, assume_ordered=False):
         return construct(m2, l1)
     return None
 
+
 def sort_by_start(rs):
     """
     Return a list of (unmodified) ranges obtained from range iterable *rs*,
@@ -515,6 +536,7 @@ def sort_by_start(rs):
     """
     rs = [s for s in rs if normalize(s) is not None]
     return sorted(rs, key=lambda x: x.start)
+
 
 def gaps(rs, construct=range, assume_ordered=False):
     """
@@ -526,12 +548,12 @@ def gaps(rs, construct=range, assume_ordered=False):
     """
     if not assume_ordered:
         rs = sort_by_start(rs)
-    l = None # last seen lower end
-    m = None # maximum of upper end within the set of ranges with lower end l
+    l = None  # last seen lower end
+    m = None  # maximum of upper end within the set of ranges with lower end l
     for r_next in rs:
         r_next = normalize(r_next)
         if r_next is not None:
-            #print((l, m), r_next)
+            # print((l, m), r_next)
             if l is not None:
                 im = intermediate(range(l, m), r_next, construct=construct)
                 if im is not None:
@@ -545,6 +567,7 @@ def gaps(rs, construct=range, assume_ordered=False):
             else:
                 l, m = r_next.start, r_next.stop
 
+
 def is_partition_of(rs, construct=range, assume_ordered=False):
     """
     Return the covering range of the ranges from range iterable *rs*,
@@ -556,6 +579,7 @@ def is_partition_of(rs, construct=range, assume_ordered=False):
         if s is not None:
             return None
     return covering_all(rs, construct=construct)
+
 
 def difference(r1, r2, construct=range):
     """
@@ -587,6 +611,7 @@ def difference(r1, r2, construct=range):
         above = None
     return below, above
 
+
 def normalize_multi(rs, construct=range, assume_ordered_increasingly=False):
     """
     Return a multirange from the given range iterable *rs*
@@ -598,24 +623,25 @@ def normalize_multi(rs, construct=range, assume_ordered_increasingly=False):
     """
     if not assume_ordered_increasingly:
         rs = sorted(filter_nonempty(rs), key=lambda x: x.start)
-    l = None    # last seen lower end of the range to be emitted
-    m = None    # upper end of the current group of overlapping ranges
-    last = None # last seen range
+    l = None     # last seen lower end of the range to be emitted
+    m = None     # upper end of the current group of overlapping ranges
+    last = None  # last seen range
     for r_next in filter_nonempty(rs):
         if l is not None:
             l1, m1 = r_next.start, r_next.stop
             if l1 > m:
                 yield construct(l, m)
-                l, m = l1, m1 # for the next iteration
-                last = r_next # if there is no next iteration
+                l, m = l1, m1  # for the next iteration
+                last = r_next  # if there is no next iteration
             else:
-                m = max(m, m1)         # for the next iteration
-                last = construct(l, m) # if there is no next iteration
+                m = max(m, m1)          # for the next iteration
+                last = construct(l, m)  # if there is no next iteration
         else:
             l, m = r_next.start, r_next.stop
             last = construct(l, m)
     if last is not None:
         yield last
+
 
 def difference_one_multi(r, mr, construct=range):
     """
@@ -626,7 +652,7 @@ def difference_one_multi(r, mr, construct=range):
     """
     n = normalize(r)
     if n is None:
-        return 
+        return
     l = n.start
     m = n.stop
     i = l
@@ -642,10 +668,11 @@ def difference_one_multi(r, mr, construct=range):
     if i < m:
         yield construct(i, m)
 
+
 def multi_intersection(mr1, mr2, construct=range):
     """
-    Return a multirange consisting of range-like objects which are intersections
-    of the ranges in multirange *mr1* and multirange *mr2*
+    Return a multirange consisting of range-like objects which are
+    intersections of the ranges in multirange *mr1* and multirange *mr2*
 
     More precisely, the resulting multirange corresponds to the set of integers
     which is the intersection of the sets of integers corresponding to *mr1*
@@ -700,13 +727,15 @@ def multi_intersection(mr1, mr2, construct=range):
                 except StopIteration:
                     return
 
+
 def multi_union(mr1, mr2, construct=range):
     """
     Return a multirange consisting of range-like objects which are unions
     of the ranges in multirange *mr1* and multirange *mr2*
 
     More precisely, the resulting multirange corresponds to the set of integers
-    which is the union of the sets of integers corresponding to *mr1* and *mr2*.
+    which is the union of the sets of integers corresponding to *mr1* and
+    *mr2*.
 
     The range-like objects generated by this function are constructed using
     *construct*. (Note: They are newly constructed, even if items from *mr1*
@@ -730,7 +759,7 @@ def multi_union(mr1, mr2, construct=range):
                 i1 = r1.start
                 f1 = r1.stop
             except StopIteration:
-                if i is not None: # result from last loop iteration
+                if i is not None:  # result from last loop iteration
                     yield construct(i, f)
                 while True:
                     try:
@@ -745,7 +774,7 @@ def multi_union(mr1, mr2, construct=range):
                 i2 = r2.start
                 f2 = r2.stop
             except StopIteration:
-                if i is not None: # result from last loop iteration
+                if i is not None:  # result from last loop iteration
                     yield construct(i, f)
                 else:
                     # next(it1) above was executed and had a result
@@ -756,28 +785,27 @@ def multi_union(mr1, mr2, construct=range):
                         yield construct(r1.start, r1.stop)
                     except StopIteration:
                         return
-        if i is None: # no continuity: start a new result range
+        if i is None:  # no continuity: start a new result range
             i = min(i1, i2)
-        if f1 < i2: # no continuity: yield one, memorize the other in (i, f)
+        if f1 < i2:  # no continuity: yield one, memorize the other in (i, f)
             yield construct(i, f1)
             r1 = None
             i = i2
             f = f2
-        elif f2 < i1: # no continuity: yield one, memorize the other in (i, f)
+        elif f2 < i1:  # no continuity: yield one, memorize the other in (i, f)
             yield construct(i, f2)
             r2 = None
             i = i1
             f = f1
         else:
             f = max(f1, f2)
-            if f1 == f2: # both ranges end: no continuity, clear both r1, and r2 
+            if f1 == f2:  # both ranges end: no continuity, clear r1 and r2
                 yield construct(i, f)
                 r1 = r2 = None
                 i = None
             elif f1 < f2:
                 f = f2
                 r1 = None
-            else: # f2 < f1
+            else:  # f2 < f1
                 f = f1
                 r2 = None
-
