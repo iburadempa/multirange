@@ -28,6 +28,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
+multiranges provides functions operating on multiple range-like objects.
+
 multirange
 ==========
 Convenience functions for multiple range-like objects
@@ -196,7 +198,7 @@ __version__ = (0, 2, 0)
 
 def normalize(r, construct=range):
     """
-    Return an object which is the normalization of range *r*
+    Return an object which is the normalization of range *r*.
 
     The normalized range is either None (if r.start >= r.stop), or an object
     constructed using *construct* with the arguments r.start, r.stop.
@@ -216,6 +218,8 @@ def normalize(r, construct=range):
 
 def filter_normalize(rs, construct=range):
     """
+    Normalize ranges iteratively.
+
     Iterate over all ranges in the given range iterable *rs*, yielding
     normalized ranges
     """
@@ -226,6 +230,8 @@ def filter_normalize(rs, construct=range):
 def filter_nonempty(rs, invert=False, do_normalize=True, construct=range,
                     with_position=False):
     """
+    Filter for non-empty ranges.
+
     Iterate over all ranges in the given range iterable *rs* and yield those
     which are not None after normalization; if *invert* is True, yield those
     which are None
@@ -255,8 +261,10 @@ def filter_nonempty(rs, invert=False, do_normalize=True, construct=range,
 
 def equals(r1, r2):
     """
+    Check equality of two ranges.
+
     Return whether the the two ranges *r1* and *r2* are equal after
-    normalization
+    normalization.
 
     Incidental remark: If you have native range objects (being not None) and
     want to take into account step values, you can use native python equality
@@ -272,8 +280,10 @@ def equals(r1, r2):
 def filter_equal(rs, r, do_normalize=True, construct=range,
                  with_position=False):
     """
+    Filter ranges for equality to a given range.
+
     Iterate over all ranges in the given range iterable *rs* and yield those
-    which are equal to range *r* after normalization
+    which are equal to range *r* after normalization.
 
     If *do_normalize* evaluates to True, then do not return the original items
     from *rs*, but instead normalized ranges, where the range objects are
@@ -297,7 +307,9 @@ def filter_equal(rs, r, do_normalize=True, construct=range,
 
 def is_adjacent(r1, r2):
     """
-    Return whether the ranges *r1* and *r2* are adjacent
+    Check for adjacency of two ranges.
+
+    Return whether the ranges *r1* and *r2* are adjacent.
 
     If *r1* or *r2* is None after normalization, return None instead of a
     :py:obj:`bool`.
@@ -315,6 +327,8 @@ def is_adjacent(r1, r2):
 
 def overlap(r1, r2, construct=range):
     """
+    Overlap of two ranges.
+
     For two ranges *r1* and *r2* return the normalized range corresponding to
     the intersection ot the sets (of consecutive integers) corresponding to
     *r1* and *r2*
@@ -334,8 +348,10 @@ def overlap(r1, r2, construct=range):
 def filter_overlap(rs, r, do_normalize=False, construct=range,
                    with_position=False):
     """
+    Filter for ranges overlapping with a given range.
+
     Iterate over the range iterable *rs*, and yield only those ranges
-    having a non-vanishing overlap with range *r*
+    having a non-vanishing overlap with range *r*.
 
     Note: Some of the original ranges are yielded, not their overlapping parts.
 
@@ -359,8 +375,10 @@ def filter_overlap(rs, r, do_normalize=False, construct=range,
 
 def match_count(rs, r):
     """
+    Count matches with a gievn range.
+
     Return the number of ranges yielded from iterable *rs*,
-    which have a non-vanishing overlap with range *r*
+    which have a non-vanishing overlap with range *r*.
     """
     n = 0
     for r2 in rs:
@@ -371,6 +389,8 @@ def match_count(rs, r):
 
 def overlap_all(rs, construct=range):
     """
+    Overlap of all given ranges.
+
     Return the range corresponding to the intersection of the sets of integers
     corresponding to the ranges obtained from the iterable *rs*
 
@@ -392,7 +412,10 @@ def overlap_all(rs, construct=range):
 
 def is_disjunct(rs, assume_ordered_increasingly=False):
     """
-    Return whether the range iterable *rs* consists of mutually disjunct ranges
+    Check for disjointness of all given ranges.
+
+    Return whether the range iterable *rs* consists of mutually disjunct
+    ranges.
 
     If *assume_ordered_increasingly* is True, only direct neighbors (qua
     iteration order) are checked for non-vanishing overlap.
@@ -409,7 +432,7 @@ def is_disjunct(rs, assume_ordered_increasingly=False):
 
 def covering_all(rs, construct=range):
     """
-    Return the smallest covering range for the ranges in range iterable *rs*
+    Return the smallest covering range for the ranges in range iterable *rs*.
 
     Return a normalized result, where the normalized object is constructed
     using *construct*.
@@ -432,7 +455,9 @@ def covering_all(rs, construct=range):
 
 def contains(r1, r2):
     """
-    Return whether range *r1* contains range *r2*
+    Check inclusion of two ranges.
+
+    Return whether range *r1* contains range *r2*.
     """
     n1 = normalize(r1)
     n2 = normalize(r2)
@@ -446,8 +471,10 @@ def contains(r1, r2):
 def filter_contained(rs, r, do_normalize=False, construct=range,
                      with_position=False):
     """
+    Filter for ranges contained in a given range.
+
     Yield those ranges from range iterable *rs*, which are contained in range
-    *r*
+    *r*.
 
     If *do_normalize* evaluates to True, then do not return the original items
     from *rs*, but instead normalized range objects constructed using
@@ -469,7 +496,9 @@ def filter_contained(rs, r, do_normalize=False, construct=range,
 
 def is_covered_by(rs, r):
     """
-    Return whether range *r* covers all ranges from range iterable *rs*
+    Check inclusion of ranges in a given range.
+
+    Return whether range *r* covers all ranges from range iterable *rs*.
     """
     cov = covering_all(rs)
     return contains(r, cov)
@@ -477,6 +506,8 @@ def is_covered_by(rs, r):
 
 def symmetric_difference(r1, r2, construct=range):
     """
+    Symmetric difference of two ranges.
+
     Return the symmetric difference between range *r1* and range *r2* as two
     range-like objects (constructed using *construct*, and possibly None),
     where the first corresponds to a subset or *r1* and the second corresponds
@@ -509,8 +540,10 @@ def symmetric_difference(r1, r2, construct=range):
 
 def intermediate(r1, r2, construct=range, assume_ordered=False):
     """
+    Intermediate of two ranges.
+
     Return the range inbetween range *r1* and range *r2*, or None
-    if they overlap or if at least one of them corresponds to an empty set
+    if they overlap or if at least one of them corresponds to an empty set.
 
     Return a normalized range object constructed using *construct*.
     """
@@ -531,8 +564,10 @@ def intermediate(r1, r2, construct=range, assume_ordered=False):
 
 def sort_by_start(rs):
     """
+    Sorted list of ranges.
+
     Return a list of (unmodified) ranges obtained from range iterable *rs*,
-    sorted by their start values, and omitting empty ranges
+    sorted by their start values, and omitting empty ranges.
     """
     rs = [s for s in rs if normalize(s) is not None]
     return sorted(rs, key=lambda x: x.start)
@@ -540,9 +575,11 @@ def sort_by_start(rs):
 
 def gaps(rs, construct=range, assume_ordered=False):
     """
+    Find gaps between ranges.
+
     Yield the gaps between the ranges from range iterable *rs*, i.e.,
     the maximal ranges without overlap with any of the ranges, but within
-    the covering range
+    the covering range.
 
     Yield normalized, non-empty range objects constructed using *construct*.
     """
@@ -570,8 +607,10 @@ def gaps(rs, construct=range, assume_ordered=False):
 
 def is_partition_of(rs, construct=range, assume_ordered=False):
     """
+    Check if ranges are a partition.
+
     Return the covering range of the ranges from range iterable *rs*,
-    if they have no gaps; else return None
+    if they have no gaps; else return None.
 
     The covering range is constructed using *construct*.
     """
@@ -583,8 +622,10 @@ def is_partition_of(rs, construct=range, assume_ordered=False):
 
 def difference(r1, r2, construct=range):
     """
+    Difference of two ranges.
+
     Return two ranges resulting when the integers from range *r2* are
-    removed from range *r1*
+    removed from range *r1*.
 
     Return two ranges: the first being the part below *r2* and the second
     the one above *r2*. They may both be None. In the special case where *r2*
@@ -614,7 +655,7 @@ def difference(r1, r2, construct=range):
 
 def normalize_multi(rs, construct=range, assume_ordered_increasingly=False):
     """
-    Return a multirange from the given range iterable *rs*
+    Return a *normalized* multirange from the given range iterable *rs*.
 
     Overlapping or adjacent ranges are merged into one, and the ranges are
     ordered increasingly.
@@ -645,7 +686,7 @@ def normalize_multi(rs, construct=range, assume_ordered_increasingly=False):
 
 def difference_one_multi(r, mr, construct=range):
     """
-    Subtract multirange *mr* from range *r*, resulting in a multirange
+    Subtract multirange *mr* from range *r*, resulting in a multirange.
 
     The range-like objects generated by this function are constructed using
     *construct*.
@@ -671,8 +712,10 @@ def difference_one_multi(r, mr, construct=range):
 
 def multi_intersection(mr1, mr2, construct=range):
     """
+    Intersection of two multiranges.
+
     Return a multirange consisting of range-like objects which are
-    intersections of the ranges in multirange *mr1* and multirange *mr2*
+    intersections of the ranges in multirange *mr1* and multirange *mr2*.
 
     More precisely, the resulting multirange corresponds to the set of integers
     which is the intersection of the sets of integers corresponding to *mr1*
@@ -730,6 +773,8 @@ def multi_intersection(mr1, mr2, construct=range):
 
 def multi_union(mr1, mr2, construct=range):
     """
+    Union of two multiranges.
+
     Return a multirange consisting of range-like objects which are unions
     of the ranges in multirange *mr1* and multirange *mr2*
 
