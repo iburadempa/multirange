@@ -64,9 +64,7 @@ It has 3 main types of operations:
       (*range iterables*)
     * operations involving so-called multiranges; we define a *multirange*
       as iterables range-like objects, which have no mutual overlap, which
-      are not adjacent, and which are ordered increasingly; a special case
-      of multirange corresponds to a *partition* of a finite set of consecutive
-      integers.
+      are not adjacent, and which are ordered increasingly.
 
 Features
 ~~~~~~~~
